@@ -1,0 +1,90 @@
+<html>
+<head>
+
+	<title>Object Detection PROJECT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></script>
+
+  <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+  
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body background="starry night.jpeg">
+<center>
+<h1 class = "btn btn-danger heading">object Detection</h1>
+<a href="index.HTML" class="btn"> Back</a>
+<br><br><br><br>
+<h3 id="status" class="btn btn-warning"></h3>
+</center>
+
+<script>
+
+
+img = "";
+
+status = "";
+
+objects = [];
+
+function preload() {
+  img = loadImage("car.jpeg");
+}
+
+
+function setup() {
+    canvas = createCanvas(640, 420);
+    canvas.center();
+    OD = ml5.objectDetector('cocossd',modelLoaded);
+    document.getElementById("status").innerHTML = "status: Detecting Object";
+}
+
+function modelLoaded() {
+  console.log('modelLoaded');
+  status = true;
+  OD.detect(img, gotresult);
+}
+
+function gotresult(error,results) {
+if (error) {
+  console.log(error);
+
+}
+console.log(results)
+objects = results
+
+}
+
+
+function draw() {
+    image(img,0,0,640,420); 
+    if (status != "") {
+      
+      for (index = 0; index < objects.length; index++) {
+
+   document.getElementById("status").innerHTML = "status object detected";
+   fill("#00FFAE");
+   percent = floor(objects[index].confidence*100);
+   text(objects[index].label+" "+percent+"%",objects[index].x,objects[index].y);
+   stroke("#00FFAE");
+   noFill();
+   rect(objects[index].x-100, objects[index].y, objects[index].width, objects[index].height);
+   
+
+      }
+
+    }
+
+   
+}
+
+</script>
+
+
+
+</body>
+</html>
